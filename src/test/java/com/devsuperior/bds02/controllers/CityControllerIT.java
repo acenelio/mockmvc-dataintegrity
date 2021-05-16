@@ -17,9 +17,21 @@ public class CityControllerIT {
 
 	@Autowired
 	private MockMvc mockMvc;
+	
+	@Test
+	public void deleteShouldReturnNoContentWhenIndependentId() throws Exception {		
+		mockMvc.perform(delete("/cities/{id}", 5L))
+				.andExpect(status().isNoContent());
+	}
 
 	@Test
-	public void deleteShouldReturnBadRequestEventWhenDependentId() throws Exception {		
+	public void deleteShouldReturnNotFoundWhenNonExistingId() throws Exception {		
+		mockMvc.perform(delete("/cities/{id}", 50L))
+				.andExpect(status().isNotFound());
+	}
+	
+	@Test
+	public void deleteShouldReturnBadRequestWhenDependentId() throws Exception {		
 		mockMvc.perform(delete("/cities/{id}", 1L))
 				.andExpect(status().isBadRequest());
 	}
